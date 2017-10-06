@@ -1,0 +1,27 @@
+{
+    "name": "makeabledk/laravel-database-notifications",
+    "license": "CC-BY-SA-4.0",
+    "autoload": {
+        "psr-4": {
+            "Makeable\\DatabaseNotifications\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.0.0",
+        "illuminate/support": "^5.4"
+    },
+    "require-dev": {
+        "laravel/laravel": "5.5",
+        "friendsofphp/php-cs-fixer": "^2.3",
+        "orchestra/testbench": "~3.5"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Makeable\\DatabaseNotifications\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit",
+        "style": "./vendor/bin/php-cs-fixer fix ./src --rules=@PSR2,@Symfony,ordered_class_elements,ordered_imports --verbose"
+    }
+}
