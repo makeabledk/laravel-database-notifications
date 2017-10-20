@@ -2,9 +2,9 @@
 
 namespace Makeable\DatabaseNotifications\Channels;
 
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\NexmoMessage;
 
-class Mail extends Channel
+class Nexmo extends Channel
 {
     use ProxiesNotifications;
 
@@ -14,6 +14,6 @@ class Mail extends Channel
      */
     public function deserialize($data)
     {
-        return $this->buildObject(new MailMessage, $data);
+        return $this->buildObject(new NexmoMessage, $data);
     }
 }

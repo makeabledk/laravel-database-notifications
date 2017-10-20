@@ -2,11 +2,16 @@
 
 namespace Makeable\DatabaseNotifications;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Ramsey\Uuid\Uuid;
 
 class Notification extends Model
 {
+    /**
+     * @var array
+     */
+    protected $guarded = [];
+
     /**
      * @var array
      */
@@ -15,19 +20,16 @@ class Notification extends Model
     ];
 
     /**
-     * @param Message $message
-     * @return mixed
+     * @var array
      */
-    public static function queue(Message $message)
-    {
-        return static::forceCreate([
-            'id' => Uuid::uuid4(),
-            'type' => $message->getType(),
-            'data' => $message->getData(),
-            'notifiable_type' => $message->getNotifiable()->getMorphClass(),
-            'notifiable_id' => $message->getNotifiable()->getKey()
-        ]);
-    }
+    protected $dates = [
+        'available_at',
+        'reserved_at',
+        'sent_at',
+        'read_at',
+        'created_at',
+        'updated_at',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -35,5 +37,25 @@ class Notification extends Model
     public function notifiable()
     {
         return $this->morphTo();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function subject()
+    {
+        return $this->morphTo();
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopePending($query)
+    {
+        return $query
+            ->where('available_at', '<', Carbon::now())
+            ->whereNull('reserved_at')
+            ->whereNull('sent_at');
     }
 }

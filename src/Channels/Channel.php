@@ -2,12 +2,10 @@
 
 namespace Makeable\DatabaseNotifications\Channels;
 
-use Illuminate\Contracts\Notifications\Dispatcher;
-use Illuminate\Notifications\Notification as NotificationTemplate;
-use Illuminate\Queue\SerializesModels;
+use BadMethodCallException;
+use Illuminate\Notifications\Notification as NotificationRecipe;
 use Illuminate\Support\Str;
-use Makeable\DatabaseNotifications\InstantNotification;
-use Makeable\DatabaseNotifications\Message;
+use Makeable\DatabaseNotifications\DatabaseChannelManager;
 use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
 
 abstract class Channel
@@ -19,6 +17,13 @@ abstract class Channel
     abstract public function deserialize($data);
 
     /**
+     * @param DatabaseNotification $notification
+     * @return mixed
+     * @internal param $data
+     */
+    abstract public function sendNow(DatabaseNotification $notification);
+
+    /**
      * @return string
      */
     public function driver()
@@ -28,37 +33,49 @@ abstract class Channel
 
     /*
     * @param $notifiable
-    * @param NotificationTemplate $notification
+    * @param NotificationRecipe $notification
     */
-    public function send($notifiable, NotificationTemplate $notification)
+    public function send($notifiable, NotificationRecipe $recipe)
     {
-        DatabaseNotification::queue($this
-            ->getMessage($notifiable, $notification)
-            ->setNotifiable($notifiable)
-            ->setType($this->driver())
-            ->transformData([$this, 'serialize'])
-        );
-    }
+        $notification = new DatabaseNotification;
+        $notification->fill([
+            'channel' => app(DatabaseChannelManager::class)->getAlias($this),
+            'notifiable_type' => $notifiable->getMorphClass(),
+            'notifiable_id' => $notifiable->getKey(),
+            'subject_type' => optional($this->fetchSubject($recipe))->getMorphClass(),
+            'subject_id' => optional($this->fetchSubject($recipe))->getKey(),
+        ]);
+        $notification->fill($this->fetchAttributes($notifiable, $recipe));
+        $notification->data = $this->serialize($notification->data);
+        $notification->id = $recipe->id;
+        $notification->save();
 
-    public function sendNow(DatabaseNotification $notification)
-    {
-        app(Dispatcher::class)->sendNow(
-            $notification->notifiable,
-            new InstantNotification($this->deserialize($notification->data)),
-            $notification->type // todo support alias through manager
-        );
+        return $notification;
     }
 
     /**
      * @param $data
-     * @return array
+     * @return mixed
      */
     public function serialize($data)
     {
-        if (is_array($data)) {
+        if (is_string($data)) {
             return $data;
         }
-        return get_object_vars($data);
+
+        if (is_object($data)) {
+            return get_object_vars($data);
+        }
+
+        if (! is_array($data)) {
+            throw new BadMethodCallException;
+        }
+
+        foreach ($data as $key => $value) {
+            $data[$key] = $this->serialize($value);
+        }
+
+        return $data;
     }
 
     /**
@@ -70,32 +87,41 @@ abstract class Channel
     }
 
     /**
-     * @param $notifiable
-     * @param NotificationTemplate $notification
-     * @return Message
-     */
-    protected function getMessage($notifiable, NotificationTemplate $notification)
-    {
-        $message = $notification->{$this->toMethod()}($notifiable);
-
-        if (! $message instanceof Message) {
-            $message = new Message($message);
-        }
-
-        return $message;
-    }
-
-    /**
      * @param $properties
      * @param $object
      * @return mixed
      */
-    protected function applyProperties($properties, $object)
+    protected function buildObject($object, $properties)
     {
         return tap($object, function ($object) use ($properties) {
             foreach($properties as $property => $value) {
                 $object->{$property} = $value;
             }
         });
+    }
+
+    /**
+     * @param $notifiable
+     * @param NotificationRecipe $notification
+     * @return array
+     */
+    protected function fetchAttributes($notifiable, NotificationRecipe $notification)
+    {
+        $data = $notification->{$this->toMethod()}($notifiable);
+
+        if ($data instanceof DatabaseNotification) {
+            return $data->toArray();
+        }
+
+        return ['data' => $data];
+    }
+
+    /**
+     * @param NotificationRecipe $notification
+     * @return mixed
+     */
+    protected function fetchSubject(NotificationRecipe $notification)
+    {
+        return method_exists($notification, 'subject')? $notification->subject() : null;
     }
 }

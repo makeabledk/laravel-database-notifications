@@ -14,31 +14,16 @@ class CreateNotificationsTable extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('type');
-            $table->string('notifiable_type')->unsigned();
-            $table->integer('notifiable_id')->unsigned();
-//            $table->string('receiver')->nullable();
-//            $table->string('subject')->nullable();
-//            $table->text('body');
-//            $table->string('action_text')->nullable();
-//            $table->text('action_url')->nullable();
+            $table->string('channel');
+            $table->morphs('notifiable');
+            $table->nullableMorphs('subject');
             $table->text('data')->nullable();
-            $table->timestamp('available_at')->nullable();
-            $table->timestamp('reserved_at')->nullable();
-            $table->timestamp('sent_at')->nullable();
-            $table->timestamp('read_at')->nullable();
+            $table->timestamp('available_at')->nullable()->index();
+            $table->timestamp('reserved_at')->nullable()->index();
+            $table->timestamp('sent_at')->nullable()->index();
+            $table->timestamp('read_at')->nullable()->index();
             $table->timestamps();
-
-            $table->index(['notifiable_type', 'notifiable_id', 'available_at']);
-
-
-//                $table->uuid('id')->primary();
-//                $table->string('type');
-//                $table->morphs('notifiable');
-//                $table->text('data');
-//                $table->timestamp('read_at')->nullable();
-//                $table->timestamps();
-        });
+       });
     }
 
     /**
