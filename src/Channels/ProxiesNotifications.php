@@ -16,7 +16,7 @@ trait ProxiesNotifications
         app(Dispatcher::class)->sendNow(
             $notification->notifiable,
             $this->buildDispatchableNotification($notification),
-            $notification->type
+            method_exists($this, 'originalDriver') ? $this->originalDriver() : $notification->type
         );
     }
 
@@ -28,12 +28,13 @@ trait ProxiesNotifications
      */
     protected function buildDispatchableNotification(DatabaseNotification $notification)
     {
-        return tap(new class { use Macroable; },
-            function ($dummy) use ($notification) {
-                $dummy::macro($this->toMethod(), function () use ($notification) {
-                    return $this->deserialize($notification->data);
-                });
-            }
-        );
+        $class = new class { use Macroable; };
+        $class::macro($this->toMethod(), function () use ($notification) {
+            return $this->deserialize($notification->data);
+        });
+
+        return tap(new $class, function ($recipe) use ($notification) {
+            $recipe->id = $notification->id;
+        });
     }
 }

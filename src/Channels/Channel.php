@@ -2,7 +2,6 @@
 
 namespace Makeable\DatabaseNotifications\Channels;
 
-use BadMethodCallException;
 use Illuminate\Notifications\Notification as NotificationRecipe;
 use Illuminate\Support\Str;
 use Makeable\DatabaseNotifications\DatabaseChannelManager;
@@ -26,9 +25,9 @@ abstract class Channel
     /**
      * @return string
      */
-    public function driver()
+    public function alias()
     {
-        return Str::camel(class_basename($this));
+        return app(DatabaseChannelManager::class)->getAlias($this);
     }
 
     /*
@@ -39,7 +38,8 @@ abstract class Channel
     {
         $notification = new DatabaseNotification;
         $notification->fill([
-            'channel' => app(DatabaseChannelManager::class)->getAlias($this),
+            'channel' => $this->alias(),
+            'type' => get_class($recipe),
             'notifiable_type' => $notifiable->getMorphClass(),
             'notifiable_id' => $notifiable->getKey(),
             'subject_type' => optional($this->fetchSubject($recipe))->getMorphClass(),
@@ -59,16 +59,12 @@ abstract class Channel
      */
     public function serialize($data)
     {
-        if (is_string($data)) {
-            return $data;
-        }
-
         if (is_object($data)) {
             return get_object_vars($data);
         }
 
         if (! is_array($data)) {
-            throw new BadMethodCallException;
+            return $data;
         }
 
         foreach ($data as $key => $value) {
@@ -83,7 +79,7 @@ abstract class Channel
      */
     public function toMethod()
     {
-        return Str::camel('to'.$this->driver());
+        return Str::camel('to_'.$this->alias());
     }
 
     /**
