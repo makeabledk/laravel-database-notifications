@@ -10,12 +10,6 @@ use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
 abstract class Channel
 {
     /**
-     * @param $data
-     * @return mixed
-     */
-    abstract public function deserialize($data);
-
-    /**
      * @param DatabaseNotification $notification
      */
     abstract public function sendNow(DatabaseNotification $notification);

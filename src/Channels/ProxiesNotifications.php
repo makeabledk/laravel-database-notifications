@@ -10,6 +10,12 @@ use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
 trait ProxiesNotifications
 {
     /**
+     * @param $data
+     * @return mixed
+     */
+    abstract public function deserialize($data);
+
+    /**
      * @param DatabaseNotification $notification
      */
     public function sendNow(DatabaseNotification $notification)

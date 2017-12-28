@@ -8,27 +8,10 @@ use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
 class DatabaseChannel extends Channel
 {
     /**
-     * @param $data
-     * @return mixed
-     */
-    public function deserialize($data)
-    {
-        return $data;
-    }
-
-    /**
      * @param DatabaseNotification $notification
      */
     public function sendNow(DatabaseNotification $notification)
     {
-        // No action required
-    }
-
-    /**
-     * @return string
-     */
-    public function notificationSentEvent()
-    {
-        return DatabaseNotificationSent::class;
+        DatabaseNotificationSent::dispatch($notification->notifiable, $notification);
     }
 }

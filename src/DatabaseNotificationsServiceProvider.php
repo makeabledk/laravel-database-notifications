@@ -8,6 +8,7 @@ use Makeable\DatabaseNotifications\Channels\DatabaseChannel;
 use Makeable\DatabaseNotifications\Channels\MailChannel;
 use Makeable\DatabaseNotifications\Channels\NexmoChannel;
 use Makeable\DatabaseNotifications\Channels\SlackChannel;
+use Makeable\DatabaseNotifications\Channels\SparkChannel;
 use Makeable\DatabaseNotifications\Console\SendPendingNotifications;
 use Makeable\DatabaseNotifications\Jobs\SendNotification;
 
@@ -34,6 +35,7 @@ class DatabaseNotificationsServiceProvider extends ServiceProvider
                 $manager->extend('mail', MailChannel::class);
                 $manager->extend('nexmo', NexmoChannel::class);
                 $manager->extend('slack', SlackChannel::class);
+                $manager->extend('spark', SparkChannel::class);
             });
         });
 
