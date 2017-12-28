@@ -15,7 +15,7 @@ class CreateMakeableDatabaseNotificationsTable extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('channel');
-            $table->string('template');
+            $table->string('template')->nullable();
             $table->morphs('notifiable');
             $table->nullableMorphs('creator');
             $table->nullableMorphs('subject');

@@ -4,6 +4,8 @@ namespace Makeable\DatabaseNotifications\Spark;
 
 use Laravel\Spark\Contracts\Repositories\NotificationRepository as NotificationRepositoryContract;
 use Laravel\Spark\Events\NotificationCreated;
+use Makeable\DatabaseNotifications\Channels\SparkChannel;
+use Makeable\DatabaseNotifications\DatabaseChannelManager;
 use Makeable\DatabaseNotifications\Notification;
 use Ramsey\Uuid\Uuid;
 
@@ -42,7 +44,9 @@ class SparkNotificationRepository implements NotificationRepositoryContract
     {
         $notification = new Notification();
         $notification->id = Uuid::uuid4();
+        $notification->channel = app(DatabaseChannelManager::class)->getAlias(SparkChannel::class);
         $notification->data = array_only($data, ['icon', 'body', 'action_text', 'action_url']);
+        $notification->template = array_get($data, 'template');
         $notification->available_at = array_get($data, 'available_at');
         $notification->setMorph('notifiable', $user);
         $notification->setMorph('creator', array_get($data, 'from'));

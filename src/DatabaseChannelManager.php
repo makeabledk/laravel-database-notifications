@@ -41,7 +41,8 @@ class DatabaseChannelManager
      */
     public function getAlias($channel)
     {
-        $alias = array_search(get_class($channel), $this->aliases);
+        $channel = is_string($channel) ? $channel : get_class($channel);
+        $alias = array_search($channel, $this->aliases);
 
         if ($alias === false) {
             throw new Exception('No alias registered for '.$channel);
