@@ -88,7 +88,7 @@ abstract class Channel
     protected function buildObject($object, $properties)
     {
         return tap($object, function ($object) use ($properties) {
-            foreach($properties as $property => $value) {
+            foreach ($properties as $property => $value) {
                 $object->{$property} = $value;
             }
         });
@@ -116,6 +116,6 @@ abstract class Channel
      */
     protected function fetchSubject(Notification $notification)
     {
-        return method_exists($notification, 'subject')? $notification->subject() : null;
+        return method_exists($notification, 'subject') ? $notification->subject() : null;
     }
 }

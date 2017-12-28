@@ -3,8 +3,8 @@
 namespace Makeable\DatabaseNotifications\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
-use Makeable\DatabaseNotifications\Notification;
 use Illuminate\Queue\SerializesModels;
+use Makeable\DatabaseNotifications\Notification;
 
 class SlackNotificationSent
 {

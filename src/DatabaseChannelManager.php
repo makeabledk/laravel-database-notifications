@@ -21,6 +21,7 @@ class DatabaseChannelManager
         if (! array_get($this->aliases, $alias)) {
             throw new Exception('Unknown channel '.$alias);
         }
+
         return app()->make($this->aliases[$alias]);
     }
 

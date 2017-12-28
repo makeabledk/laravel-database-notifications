@@ -17,7 +17,7 @@ trait ProxiesNotifications
         app(Dispatcher::class)->sendNow(
             $notification->notifiable,
             $this->buildDispatchableNotification($notification),
-            array(method_exists($this, 'originalDriver') ? $this->originalDriver() : $notification->channel)
+            [method_exists($this, 'originalDriver') ? $this->originalDriver() : $notification->channel]
         );
 
         if (method_exists($this, 'notificationSentEvent')) {
@@ -29,7 +29,7 @@ trait ProxiesNotifications
     }
 
     /**
-     * Build a dummy notification class that mocks the original 'to' method
+     * Build a dummy notification class that mocks the original 'to' method.
      *
      * @param DatabaseNotification $notification
      * @return mixed
@@ -38,7 +38,9 @@ trait ProxiesNotifications
     {
         $payload = $this->deserialize($notification->data);
 
-        $class = new class extends Notification { use Macroable; };
+        $class = new class extends Notification {
+            use Macroable;
+        };
         $class::macro($this->toMethod(), function () use ($payload) {
             return $payload;
         });

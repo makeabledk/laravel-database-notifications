@@ -2,7 +2,6 @@
 
 namespace Makeable\DatabaseNotifications;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
@@ -21,7 +20,7 @@ class Notification extends Model
      * @var array
      */
     protected $casts = [
-        'data' => 'array'
+        'data' => 'array',
     ];
 
     /**
