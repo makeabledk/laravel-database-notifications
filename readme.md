@@ -1,9 +1,9 @@
 
 # Laravel Database Notifications
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/makeabledk/laravel-eloquent-status.svg?style=flat-square)](https://packagist.org/packages/makeabledk/laravel-eloquent-status)
-[![Build Status](https://img.shields.io/travis/makeabledk/laravel-eloquent-status/master.svg?style=flat-square)](https://travis-ci.org/makeabledk/laravel-eloquent-status)
-[![StyleCI](https://styleci.io/repos/102474433/shield?branch=master)](https://styleci.io/repos/102474433)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/makeabledk/laravel-database-notifications.svg?style=flat-square)](https://packagist.org/packages/makeabledk/laravel-database-notifications)
+[![Build Status](https://img.shields.io/travis/makeabledk/laravel-database-notifications/master.svg?style=flat-square)](https://travis-ci.org/makeabledk/laravel-database-notifications)
+[![StyleCI](https://styleci.io/repos/106052014/shield?branch=master)](https://styleci.io/repos/106052014)
 
 Makeable is web- and mobile app agency located in Aarhus, Denmark.
 
@@ -12,11 +12,12 @@ Makeable is web- and mobile app agency located in Aarhus, Denmark.
 You can install this package via composer:
 
 ``` bash
-composer require makeabledk/laravel-eloquent-status
+composer require makeabledk/laravel-database-notifications
 ```
 
 ## Usage
 
+TODO
 
 ## Change log
 
