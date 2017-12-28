@@ -4,7 +4,7 @@ namespace Makeable\DatabaseNotifications\Channels;
 
 use Illuminate\Notifications\Messages\NexmoMessage;
 
-class Nexmo extends Channel
+class NexmoChannel extends Channel
 {
     use ProxiesNotifications;
 

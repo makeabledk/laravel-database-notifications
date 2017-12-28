@@ -5,7 +5,7 @@ namespace Makeable\DatabaseNotifications\Tests\Feature;
 use Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\Events\NotificationSent;
-use Makeable\DatabaseNotifications\Channels\Database;
+use Makeable\DatabaseNotifications\Channels\DatabaseChannel;
 use Makeable\DatabaseNotifications\Notification;
 use Makeable\DatabaseNotifications\Tests\Stubs\OrderShippedNotification;
 use Makeable\DatabaseNotifications\Tests\TestCase;
@@ -22,7 +22,7 @@ class CreateNotificationTest extends TestCase
     }
 
     /** @test * */
-    function it_stores_with_id_channel_type_and_notifiable()
+    function it_stores_with_id_channel_template_and_notifiable()
     {
         $notifiable = $this->notifiable();
         $notification = $this->notification();
@@ -65,11 +65,11 @@ class CreateNotificationTest extends TestCase
     function a_database_notification_instance_can_be_returned_from_a_to_method()
     {
         $notifiable = $this->notifiable();
-        $notifiable->notify($this->notification(Database::class));
+        $notifiable->notify($this->notification(DatabaseChannel::class));
         $database = Notification::first();
 
         $this->assertEquals('database', $database->channel);
-        $this->assertEquals(OrderShippedNotification::class, $database->type);
+        $this->assertEquals(OrderShippedNotification::class, $database->template);
         $this->assertNotNull($database->available_at);
         $this->assertEquals('Hi there. Your order has been shipped.', $database->data['contents']);
     }

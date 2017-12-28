@@ -7,7 +7,7 @@ use Illuminate\Notifications\Messages\SlackAttachmentField;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Makeable\DatabaseNotifications\Events\SlackNotificationSent;
 
-class Slack extends Channel
+class SlackChannel extends Channel
 {
     use ProxiesNotifications;
 

@@ -5,7 +5,7 @@ namespace Makeable\DatabaseNotifications\Channels;
 use Illuminate\Notifications\Messages\MailMessage;
 use Makeable\DatabaseNotifications\Events\MailNotificationSent;
 
-class Mail extends Channel
+class MailChannel extends Channel
 {
     use ProxiesNotifications;
 

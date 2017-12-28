@@ -5,7 +5,7 @@ namespace Makeable\DatabaseNotifications\Channels;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Makeable\DatabaseNotifications\Events\BroadcastNotificationSent;
 
-class Broadcast extends Channel
+class BroadcastChannel extends Channel
 {
     use ProxiesNotifications;
 

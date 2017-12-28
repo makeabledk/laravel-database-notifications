@@ -32,20 +32,20 @@ abstract class Channel
     * @param $notifiable
     * @param Notification $notification
     */
-    public function send($notifiable, Notification $recipe)
+    public function send($notifiable, Notification $template)
     {
         $notification = new DatabaseNotification;
         $notification->fill([
             'channel' => $this->alias(),
-            'type' => get_class($recipe),
+            'template' => get_class($template),
             'notifiable_type' => $notifiable->getMorphClass(),
             'notifiable_id' => $notifiable->getKey(),
-            'subject_type' => optional($subject = $this->fetchSubject($recipe))->getMorphClass(),
+            'subject_type' => optional($subject = $this->fetchSubject($template))->getMorphClass(),
             'subject_id' => optional($subject)->getKey(),
         ]);
-        $notification->fill($this->fetchAttributes($notifiable, $recipe));
+        $notification->fill($this->fetchAttributes($notifiable, $template));
         $notification->data = $this->serialize($notification->data);
-        $notification->id = $recipe->id;
+        $notification->id = $template->id;
         $notification->save();
 
         return $notification;

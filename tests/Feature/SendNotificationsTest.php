@@ -4,7 +4,7 @@ namespace Makeable\DatabaseNotifications\Tests\Feature;
 
 use Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Makeable\DatabaseNotifications\Channels\Database;
+use Makeable\DatabaseNotifications\Channels\DatabaseChannel;
 use Makeable\DatabaseNotifications\Events\MailNotificationSent;
 use Makeable\DatabaseNotifications\Notification;
 use Makeable\DatabaseNotifications\Tests\TestCase;
@@ -44,7 +44,7 @@ class SendNotificationsTest extends TestCase
     function it_does_not_send_notifications_that_are_unavailable()
     {
         // Database notifications are set to have a future available_at in OrderShippedNotification
-        $this->notifiable()->notify($this->notification(Database::class));
+        $this->notifiable()->notify($this->notification(DatabaseChannel::class));
 
         $notification = Notification::first();
 
@@ -56,7 +56,7 @@ class SendNotificationsTest extends TestCase
     function it_can_send_pending_notifications_through_console()
     {
         // Database notifications are set to have a future available_at in OrderShippedNotification
-        $this->notifiable()->notify($this->notification(Database::class));
+        $this->notifiable()->notify($this->notification(DatabaseChannel::class));
         $this->artisan('notifications:send');
 
         $notification = Notification::first();

@@ -5,7 +5,7 @@ namespace Makeable\DatabaseNotifications\Channels;
 use Makeable\DatabaseNotifications\Events\DatabaseNotificationSent;
 use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
 
-class Database extends Channel
+class DatabaseChannel extends Channel
 {
     /**
      * @param $data

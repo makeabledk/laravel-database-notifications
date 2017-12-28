@@ -64,7 +64,7 @@ class TestCase extends BaseTestCase
         });
     }
 
-    protected function notification($channel = \Makeable\DatabaseNotifications\Channels\Mail::class)
+    protected function notification($channel = \Makeable\DatabaseNotifications\Channels\MailChannel::class)
     {
         return new OrderShippedNotification(Order::create(), $channel);
     }
