@@ -2,10 +2,10 @@
 
 namespace Makeable\DatabaseNotifications\Spark;
 
-use Ramsey\Uuid\Uuid;
-use Makeable\DatabaseNotifications\Notification;
-use Laravel\Spark\Events\NotificationCreated;
 use Laravel\Spark\Contracts\Repositories\NotificationRepository as NotificationRepositoryContract;
+use Laravel\Spark\Events\NotificationCreated;
+use Makeable\DatabaseNotifications\Notification;
+use Ramsey\Uuid\Uuid;
 
 class SparkNotificationRepository implements NotificationRepositoryContract
 {
