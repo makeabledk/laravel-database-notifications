@@ -17,6 +17,7 @@ class CreateNotificationsTable extends Migration
             $table->string('channel');
             $table->string('template');
             $table->morphs('notifiable');
+            $table->nullableMorphs('creator');
             $table->nullableMorphs('subject');
             $table->text('data')->nullable();
             $table->timestamp('available_at')->nullable()->index();

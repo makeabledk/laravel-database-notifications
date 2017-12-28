@@ -35,17 +35,16 @@ abstract class Channel
     public function send($notifiable, Notification $template)
     {
         $notification = new DatabaseNotification;
-        $notification->fill([
-            'channel' => $this->alias(),
-            'template' => get_class($template),
-            'notifiable_type' => $notifiable->getMorphClass(),
-            'notifiable_id' => $notifiable->getKey(),
-            'subject_type' => optional($subject = $this->fetchSubject($template))->getMorphClass(),
-            'subject_id' => optional($subject)->getKey(),
-        ]);
+        $notification->setMorph('notifiable', $notifiable);
+        $notification->setMorph('creator', $this->fetchCreator($template));
+        $notification->setMorph('subject', $this->fetchSubject($template));
+        $notification->channel = $this->alias();
+        $notification->template = get_class($template);
+
         $notification->fill($this->fetchAttributes($notifiable, $template));
         $notification->data = $this->serialize($notification->data);
         $notification->id = $template->id;
+
         $notification->save();
 
         return $notification;
@@ -108,6 +107,15 @@ abstract class Channel
         }
 
         return ['data' => $data];
+    }
+
+    /**
+     * @param Notification $notification
+     * @return mixed
+     */
+    protected function fetchCreator(Notification $notification)
+    {
+        return method_exists($notification, 'creator') ? $notification->creator() : null;
     }
 
     /**

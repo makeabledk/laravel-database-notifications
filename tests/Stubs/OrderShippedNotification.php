@@ -2,6 +2,7 @@
 
 namespace Makeable\DatabaseNotifications\Tests\Stubs;
 
+use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -48,6 +49,14 @@ class OrderShippedNotification extends Notification implements ShouldQueue
     public function subject()
     {
         return $this->order;
+    }
+
+    /**
+     * @return User
+     */
+    public function creator()
+    {
+        return factory(User::class)->create(['id' => 10]);
     }
 
     /**

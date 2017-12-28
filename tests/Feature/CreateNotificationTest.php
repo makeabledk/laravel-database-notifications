@@ -53,6 +53,15 @@ class CreateNotificationTest extends TestCase
     }
 
     /** @test **/
+    public function it_stores_creator_if_present_on_notification()
+    {
+        $this->notifiable()->notify($this->notification());
+        $database = Notification::first();
+
+        $this->assertEquals(10, $database->creator->id);
+    }
+
+    /** @test **/
     public function it_has_a_notifiable_relationship()
     {
         $notifiable = $this->notifiable();

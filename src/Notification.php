@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
+    use InteractsWithPolymorphism;
+
     /**
      * @var bool
      */
@@ -35,6 +37,16 @@ class Notification extends Model
         'updated_at',
     ];
 
+    // _________________________________________________________________________________________________________________
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function creator()
+    {
+        return $this->morphTo();
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
@@ -50,6 +62,8 @@ class Notification extends Model
     {
         return $this->morphTo();
     }
+
+    // _________________________________________________________________________________________________________________
 
     /**
      * @param $query
@@ -67,9 +81,28 @@ class Notification extends Model
      * @param $query
      * @return mixed
      */
+    public function scopeRead($query)
+    {
+        return $query->whereNotNull('read_at');
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeSent($query)
     {
-        return $query
-            ->whereNotNull('sent_at');
+        return $query->whereNotNull('sent_at');
     }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeUnread($query)
+    {
+        return $query->whereNull('read_at');
+    }
+
+    // _________________________________________________________________________________________________________________
 }
