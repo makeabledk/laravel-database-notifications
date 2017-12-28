@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateNotificationsTable extends Migration
 {
@@ -24,7 +24,7 @@ class CreateNotificationsTable extends Migration
             $table->timestamp('sent_at')->nullable()->index();
             $table->timestamp('read_at')->nullable()->index();
             $table->timestamps();
-       });
+        });
     }
 
     /**

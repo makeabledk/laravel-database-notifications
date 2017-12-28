@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'send-immediately' => true
+    'send-immediately' => true,
 ];

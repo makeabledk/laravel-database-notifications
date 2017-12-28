@@ -2,7 +2,6 @@
 
 namespace Makeable\DatabaseNotifications\Tests\Feature;
 
-use Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Makeable\DatabaseNotifications\Channels\DatabaseChannel;
 use Makeable\DatabaseNotifications\Events\MailNotificationSent;
@@ -14,7 +13,7 @@ class SendNotificationsTest extends TestCase
     use RefreshDatabase;
 
     /** @test **/
-    function it_sends_queued_notifications_immediately()
+    public function it_sends_queued_notifications_immediately()
     {
         $this->notifiable()->notify($this->notification());
 
@@ -25,7 +24,7 @@ class SendNotificationsTest extends TestCase
     }
 
     /** @test **/
-    function it_does_not_send_queued_notifications_when_switched_off()
+    public function it_does_not_send_queued_notifications_when_switched_off()
     {
         config()->set('database-notifications.send-immediately', false);
 
@@ -41,7 +40,7 @@ class SendNotificationsTest extends TestCase
     }
 
     /** @test **/
-    function it_does_not_send_notifications_that_are_unavailable()
+    public function it_does_not_send_notifications_that_are_unavailable()
     {
         // Database notifications are set to have a future available_at in OrderShippedNotification
         $this->notifiable()->notify($this->notification(DatabaseChannel::class));
@@ -53,7 +52,7 @@ class SendNotificationsTest extends TestCase
     }
 
     /** @test **/
-    function it_can_send_pending_notifications_through_console()
+    public function it_can_send_pending_notifications_through_console()
     {
         // Database notifications are set to have a future available_at in OrderShippedNotification
         $this->notifiable()->notify($this->notification(DatabaseChannel::class));
@@ -73,7 +72,7 @@ class SendNotificationsTest extends TestCase
     }
 
     /** @test **/
-    function it_raises_event_when_notification_was_sent()
+    public function it_raises_event_when_notification_was_sent()
     {
         $checkNotifiable = null;
         $checkNotification = null;

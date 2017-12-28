@@ -5,7 +5,6 @@ namespace Makeable\DatabaseNotifications\Tests\Stubs;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
 use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
 
@@ -40,7 +39,7 @@ class OrderShippedNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return array($this->channel);
+        return [$this->channel];
     }
 
     /**
@@ -72,9 +71,9 @@ class OrderShippedNotification extends Notification implements ShouldQueue
     {
         return new DatabaseNotification([
             'data' => [
-                'contents' => 'Hi there. Your order has been shipped.'
+                'contents' => 'Hi there. Your order has been shipped.',
             ],
-            'available_at' => now()->addHour()
+            'available_at' => now()->addHour(),
         ]);
     }
 }

@@ -45,11 +45,11 @@ class TestCase extends BaseTestCase
      */
     protected function notifiable()
     {
-        return tap(new User, function($user) {
+        return tap(new User, function ($user) {
             $user->fill([
                 'name' => 'John',
                 'email' => 'test@example.com',
-                'password' => 'foo'
+                'password' => 'foo',
             ])->save();
         });
     }

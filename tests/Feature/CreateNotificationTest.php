@@ -15,20 +15,20 @@ class CreateNotificationTest extends TestCase
     use RefreshDatabase;
 
     /** @test * */
-    function it_stores_a_notification_to_the_database()
+    public function it_stores_a_notification_to_the_database()
     {
         $this->notifiable()->notify($this->notification());
         $this->assertEquals(1, Notification::count());
     }
 
     /** @test * */
-    function it_stores_with_id_channel_template_and_notifiable()
+    public function it_stores_with_id_channel_template_and_notifiable()
     {
         $notifiable = $this->notifiable();
         $notification = $this->notification();
         $sent = false;
 
-        Event::listen(NotificationSent::class, function($event) use ($notifiable, &$sent) {
+        Event::listen(NotificationSent::class, function ($event) use ($notifiable, &$sent) {
             $stored = Notification::first();
 
             $this->assertTrue($notifiable->is($stored->notifiable));
@@ -43,7 +43,7 @@ class CreateNotificationTest extends TestCase
     }
 
     /** @test **/
-    function it_stores_subject_if_present_on_notification()
+    public function it_stores_subject_if_present_on_notification()
     {
         $this->notifiable()->notify($this->notification());
         $database = Notification::first();
@@ -53,7 +53,7 @@ class CreateNotificationTest extends TestCase
     }
 
     /** @test **/
-    function it_has_a_notifiable_relationship()
+    public function it_has_a_notifiable_relationship()
     {
         $notifiable = $this->notifiable();
         $notifiable->notify($this->notification());
@@ -62,7 +62,7 @@ class CreateNotificationTest extends TestCase
     }
 
     /** @test **/
-    function a_database_notification_instance_can_be_returned_from_a_to_method()
+    public function a_database_notification_instance_can_be_returned_from_a_to_method()
     {
         $notifiable = $this->notifiable();
         $notifiable->notify($this->notification(DatabaseChannel::class));

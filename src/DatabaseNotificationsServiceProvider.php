@@ -38,7 +38,7 @@ class DatabaseNotificationsServiceProvider extends ServiceProvider
         });
 
         $this->commands([
-            SendPendingNotifications::class
+            SendPendingNotifications::class,
         ]);
     }
 }
