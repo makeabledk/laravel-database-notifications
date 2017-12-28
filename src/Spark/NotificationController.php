@@ -3,9 +3,9 @@
 namespace Makeable\DatabaseNotifications\Spark;
 
 use Illuminate\Http\Request;
-use Makeable\DatabaseNotifications\Notification;
-use Laravel\Spark\Contracts\Repositories\NotificationRepository;
 use Laravel\Spark\Contracts\Repositories\AnnouncementRepository;
+use Laravel\Spark\Contracts\Repositories\NotificationRepository;
+use Makeable\DatabaseNotifications\Notification;
 
 class NotificationController extends Controller
 {

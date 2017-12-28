@@ -41,7 +41,7 @@ trait InteractsWithPolymorphism
     public function scopeWhereMorphNot($query, $relation, $model)
     {
         return $query
-            ->where("{$relation}_id", "!=", optional($model)->getKey())
-            ->orWhere("{$relation}_type", "!=", optional($model)->getMorphClass());
+            ->where("{$relation}_id", '!=', optional($model)->getKey())
+            ->orWhere("{$relation}_type", '!=', optional($model)->getMorphClass());
     }
 }
