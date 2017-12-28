@@ -5,9 +5,10 @@ namespace Makeable\DatabaseNotifications\Tests\Feature;
 use Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\Events\NotificationSent;
-use Illuminate\Notifications\Messages\MailMessage;
 use Makeable\DatabaseNotifications\Channels\Mail;
 use Makeable\DatabaseNotifications\Notification;
+use Makeable\DatabaseNotifications\Tests\Stubs\Order;
+use Makeable\DatabaseNotifications\Tests\Stubs\OrderShippedNotification;
 use Makeable\DatabaseNotifications\Tests\TestCase;
 
 class StoreNotificationsTest extends TestCase
@@ -17,7 +18,7 @@ class StoreNotificationsTest extends TestCase
     /** @test * */
     function it_saves_a_notification_to_the_database()
     {
-        $this->notifiable()->notify($this->mailNotification());
+        $this->notifiable()->notify($this->notification());
         $this->assertEquals(1, Notification::count());
     }
 
@@ -25,7 +26,7 @@ class StoreNotificationsTest extends TestCase
     function it_stores_with_id_channel_type_and_notifiable()
     {
         $notifiable = $this->notifiable();
-        $notification = $this->mailNotification();
+        $notification = $this->notification();
         $sent = false;
 
         Event::listen(NotificationSent::class, function($event) use ($notifiable, &$sent) {
@@ -46,33 +47,28 @@ class StoreNotificationsTest extends TestCase
     /** @test **/
     function it_stores_subject_if_present_on_notification()
     {
-//        $notification =
+        $notifiable = $this->notifiable();
+        $notification = $this->notification();
+
+        $notifiable->notify($notification);
+
+        $database = Notification::first();
+
+        $this->assertEquals('mail', $database->channel);
+        $this->assertEquals(1, $database->subject->id);
     }
 
     /** @test **/
-    function a_database_notification_instance_can_be_returned_from_a_to_method()
+    function it_has_a_notifiable_relationship()
     {
-//        $notification =
+        $notifiable = $this->notifiable();
+        $notifiable->notify($this->notification());
+
+        $this->assertTrue($notifiable->is(Notification::first()->notifiable));
     }
 
-    /**
-     * @return \Illuminate\Notifications\Notification
-     */
-    protected function mailNotification()
+    protected function notification($channel = Mail::class)
     {
-        return new class extends \Illuminate\Notifications\Notification {
-            public function via($notifiable){
-                return [Mail::class];
-            }
-
-            public function toMail($notifiable){
-                return (new MailMessage)
-                    ->greeting('Hi there')
-                    ->line('Your order has been shipped!')
-                    ->action('Check it out', 'example.com')
-                    ->line('Goodbye!');
-            }
-        };
+        return new OrderShippedNotification(Order::create(), $channel);
     }
-
 }

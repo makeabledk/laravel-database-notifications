@@ -27,10 +27,12 @@ class SendPendingNotifications extends Command
      */
     public function handle()
     {
-        app(Notification::class)->pending()->get()->each(function (Notification $notification) {
-            dispatch(new SendNotification($notification));
-
-            $this->comment('Started dispatching notification #'.$notification->id);
-        });
+        app(Notification::class)
+            ->pending()
+            ->get()
+            ->each(function (Notification $notification) {
+                SendNotification::dispatch($notification);
+                $this->comment('Started dispatching notification #'.$notification->id);
+            });
     }
 }

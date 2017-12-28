@@ -13,7 +13,7 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-//        $this->setUpDatabase($this->app);
+        $this->setUpDatabase($this->app);
     }
 
     /**
@@ -49,14 +49,13 @@ class TestCase extends BaseTestCase
         });
     }
 
-//
-//    /**
-//     * @param \Illuminate\Foundation\Application $app
-//     */
-//    protected function setUpDatabase($app)
-//    {
-//        $app['db']->connection()->getSchemaBuilder()->create('orders', function (Blueprint $table) {
-//            $table->increments('id');
-//        });
-//    }
+    /**
+     * @param \Illuminate\Foundation\Application $app
+     */
+    protected function setUpDatabase($app)
+    {
+        $app['db']->connection()->getSchemaBuilder()->create('orders', function (Blueprint $table) {
+            $table->increments('id');
+        });
+    }
 }

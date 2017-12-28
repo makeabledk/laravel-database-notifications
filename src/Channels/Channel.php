@@ -2,7 +2,7 @@
 
 namespace Makeable\DatabaseNotifications\Channels;
 
-use Illuminate\Notifications\Notification as NotificationRecipe;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
 use Makeable\DatabaseNotifications\DatabaseChannelManager;
 use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
@@ -32,9 +32,9 @@ abstract class Channel
 
     /*
     * @param $notifiable
-    * @param NotificationRecipe $notification
+    * @param Notification $notification
     */
-    public function send($notifiable, NotificationRecipe $recipe)
+    public function send($notifiable, Notification $recipe)
     {
         $notification = new DatabaseNotification;
         $notification->fill([
@@ -42,8 +42,8 @@ abstract class Channel
             'type' => get_class($recipe),
             'notifiable_type' => $notifiable->getMorphClass(),
             'notifiable_id' => $notifiable->getKey(),
-            'subject_type' => optional($this->fetchSubject($recipe))->getMorphClass(),
-            'subject_id' => optional($this->fetchSubject($recipe))->getKey(),
+            'subject_type' => optional($subject = $this->fetchSubject($recipe))->getMorphClass(),
+            'subject_id' => optional($subject)->getKey(),
         ]);
         $notification->fill($this->fetchAttributes($notifiable, $recipe));
         $notification->data = $this->serialize($notification->data);
@@ -98,10 +98,10 @@ abstract class Channel
 
     /**
      * @param $notifiable
-     * @param NotificationRecipe $notification
+     * @param Notification $notification
      * @return array
      */
-    protected function fetchAttributes($notifiable, NotificationRecipe $notification)
+    protected function fetchAttributes($notifiable, Notification $notification)
     {
         $data = $notification->{$this->toMethod()}($notifiable);
 
@@ -113,10 +113,10 @@ abstract class Channel
     }
 
     /**
-     * @param NotificationRecipe $notification
+     * @param Notification $notification
      * @return mixed
      */
-    protected function fetchSubject(NotificationRecipe $notification)
+    protected function fetchSubject(Notification $notification)
     {
         return method_exists($notification, 'subject')? $notification->subject() : null;
     }

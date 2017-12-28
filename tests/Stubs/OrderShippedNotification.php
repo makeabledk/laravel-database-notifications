@@ -5,18 +5,31 @@ namespace Makeable\DatabaseNotifications\Tests\Stubs;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
-use Makeable\DatabaseNotifications\Channels\Mail;
+use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
 
 class OrderShippedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
+     * @var Order
+     */
+    protected $order = null;
+
+    /**
+     * @var null
+     */
+    protected $channel = null;
+
+    /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(Order $order, $channel)
     {
+        $this->order = $order;
+        $this->channel = $channel;
     }
 
     /**
@@ -27,9 +40,15 @@ class OrderShippedNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return [
-            Mail::class
-        ];
+        return array($this->channel);
+    }
+
+    /**
+     * @return Order
+     */
+    public function subject()
+    {
+        return $this->order;
     }
 
     /**
@@ -44,4 +63,15 @@ class OrderShippedNotification extends Notification implements ShouldQueue
             ->action('Check it out', 'example.com')
             ->line('Goodbye!');
     }
+
+//    /**
+//     * @param $notifiable
+//     * @return DatabaseNotification
+//     */
+//    public function toNexmo($notifiable)
+//    {
+//        return new DatabaseNotification([
+//            'data' => new NexmoMessage('Hi there. Your order has been shipped.')
+//        ]);
+//    }
 }
