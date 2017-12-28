@@ -59,8 +59,18 @@ class Notification extends Model
     public function scopePending($query)
     {
         return $query
-            ->where('available_at', '<', Carbon::now())
+            ->where('available_at', '<=', now())
             ->whereNull('reserved_at')
             ->whereNull('sent_at');
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeSent($query)
+    {
+        return $query
+            ->whereNotNull('sent_at');
     }
 }

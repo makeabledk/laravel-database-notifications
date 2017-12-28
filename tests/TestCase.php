@@ -5,7 +5,10 @@ namespace Makeable\DatabaseNotifications\Tests;
 use App\User;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Mail;
 use Makeable\DatabaseNotifications\DatabaseNotificationsServiceProvider;
+use Makeable\DatabaseNotifications\Tests\Stubs\Order;
+use Makeable\DatabaseNotifications\Tests\Stubs\OrderShippedNotification;
 
 class TestCase extends BaseTestCase
 {
@@ -14,6 +17,8 @@ class TestCase extends BaseTestCase
         parent::setUp();
 
         $this->setUpDatabase($this->app);
+
+        Mail::fake();
     }
 
     /**
@@ -57,5 +62,10 @@ class TestCase extends BaseTestCase
         $app['db']->connection()->getSchemaBuilder()->create('orders', function (Blueprint $table) {
             $table->increments('id');
         });
+    }
+
+    protected function notification($channel = \Makeable\DatabaseNotifications\Channels\Mail::class)
+    {
+        return new OrderShippedNotification(Order::create(), $channel);
     }
 }

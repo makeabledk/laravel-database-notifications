@@ -1,8 +1,10 @@
 <?php
 
-namespace Makeable\DatabaseNotifications;
+namespace Makeable\DatabaseNotifications\Console;
 
 use Illuminate\Console\Command;
+use Makeable\DatabaseNotifications\Jobs\SendNotification;
+use Makeable\DatabaseNotifications\Notification;
 
 class SendPendingNotifications extends Command
 {
@@ -32,6 +34,7 @@ class SendPendingNotifications extends Command
             ->get()
             ->each(function (Notification $notification) {
                 SendNotification::dispatch($notification);
+
                 $this->comment('Started dispatching notification #'.$notification->id);
             });
     }

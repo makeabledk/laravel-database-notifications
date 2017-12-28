@@ -2,10 +2,10 @@
 
 namespace Makeable\DatabaseNotifications\Channels;
 
-use Illuminate\Notifications\Messages\MailMessage;
-use Makeable\DatabaseNotifications\Events\MailNotificationSent;
+use Illuminate\Notifications\Messages\BroadcastMessage;
+use Makeable\DatabaseNotifications\Events\BroadcastNotificationSent;
 
-class Mail extends Channel
+class Broadcast extends Channel
 {
     use ProxiesNotifications;
 
@@ -15,7 +15,7 @@ class Mail extends Channel
      */
     public function deserialize($data)
     {
-        return $this->buildObject(new MailMessage, $data);
+        return new BroadcastMessage($data);
     }
 
     /**
@@ -23,6 +23,6 @@ class Mail extends Channel
      */
     public function notificationSentEvent()
     {
-        return MailNotificationSent::class;
+        return BroadcastNotificationSent::class;
     }
 }

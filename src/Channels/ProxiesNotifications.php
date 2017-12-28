@@ -3,6 +3,7 @@
 namespace Makeable\DatabaseNotifications\Channels;
 
 use Illuminate\Contracts\Notifications\Dispatcher;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Traits\Macroable;
 use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
 
@@ -16,8 +17,15 @@ trait ProxiesNotifications
         app(Dispatcher::class)->sendNow(
             $notification->notifiable,
             $this->buildDispatchableNotification($notification),
-            method_exists($this, 'originalDriver') ? $this->originalDriver() : $notification->type
+            array(method_exists($this, 'originalDriver') ? $this->originalDriver() : $notification->channel)
         );
+
+        if (method_exists($this, 'notificationSentEvent')) {
+            call_user_func_array(
+                [$this->notificationSentEvent(), 'dispatch'],
+                [$notification->notifiable, $notification]
+            );
+        }
     }
 
     /**
@@ -28,9 +36,11 @@ trait ProxiesNotifications
      */
     protected function buildDispatchableNotification(DatabaseNotification $notification)
     {
-        $class = new class { use Macroable; };
-        $class::macro($this->toMethod(), function () use ($notification) {
-            return $this->deserialize($notification->data);
+        $payload = $this->deserialize($notification->data);
+
+        $class = new class extends Notification { use Macroable; };
+        $class::macro($this->toMethod(), function () use ($payload) {
+            return $payload;
         });
 
         return tap(new $class, function ($recipe) use ($notification) {

@@ -17,8 +17,6 @@ abstract class Channel
 
     /**
      * @param DatabaseNotification $notification
-     * @return mixed
-     * @internal param $data
      */
     abstract public function sendNow(DatabaseNotification $notification);
 

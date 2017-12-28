@@ -64,14 +64,17 @@ class OrderShippedNotification extends Notification implements ShouldQueue
             ->line('Goodbye!');
     }
 
-//    /**
-//     * @param $notifiable
-//     * @return DatabaseNotification
-//     */
-//    public function toNexmo($notifiable)
-//    {
-//        return new DatabaseNotification([
-//            'data' => new NexmoMessage('Hi there. Your order has been shipped.')
-//        ]);
-//    }
+    /**
+     * @param $notifiable
+     * @return DatabaseNotification
+     */
+    public function toDatabase($notifiable)
+    {
+        return new DatabaseNotification([
+            'data' => [
+                'contents' => 'Hi there. Your order has been shipped.'
+            ],
+            'available_at' => now()->addHour()
+        ]);
+    }
 }

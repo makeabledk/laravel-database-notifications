@@ -5,18 +5,17 @@ namespace Makeable\DatabaseNotifications\Tests\Feature;
 use Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\Events\NotificationSent;
-use Makeable\DatabaseNotifications\Channels\Mail;
+use Makeable\DatabaseNotifications\Channels\Database;
 use Makeable\DatabaseNotifications\Notification;
-use Makeable\DatabaseNotifications\Tests\Stubs\Order;
 use Makeable\DatabaseNotifications\Tests\Stubs\OrderShippedNotification;
 use Makeable\DatabaseNotifications\Tests\TestCase;
 
-class StoreNotificationsTest extends TestCase
+class CreateNotificationTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test * */
-    function it_saves_a_notification_to_the_database()
+    function it_stores_a_notification_to_the_database()
     {
         $this->notifiable()->notify($this->notification());
         $this->assertEquals(1, Notification::count());
@@ -35,7 +34,6 @@ class StoreNotificationsTest extends TestCase
             $this->assertTrue($notifiable->is($stored->notifiable));
             $this->assertEquals($event->notification->id, $stored->id);
             $this->assertEquals('mail', $stored->channel);
-            $this->assertEquals(get_class($event->notification), $stored->type);
 
             $sent = true;
         });
@@ -47,11 +45,7 @@ class StoreNotificationsTest extends TestCase
     /** @test **/
     function it_stores_subject_if_present_on_notification()
     {
-        $notifiable = $this->notifiable();
-        $notification = $this->notification();
-
-        $notifiable->notify($notification);
-
+        $this->notifiable()->notify($this->notification());
         $database = Notification::first();
 
         $this->assertEquals('mail', $database->channel);
@@ -67,8 +61,16 @@ class StoreNotificationsTest extends TestCase
         $this->assertTrue($notifiable->is(Notification::first()->notifiable));
     }
 
-    protected function notification($channel = Mail::class)
+    /** @test **/
+    function a_database_notification_instance_can_be_returned_from_a_to_method()
     {
-        return new OrderShippedNotification(Order::create(), $channel);
+        $notifiable = $this->notifiable();
+        $notifiable->notify($this->notification(Database::class));
+        $database = Notification::first();
+
+        $this->assertEquals('database', $database->channel);
+        $this->assertEquals(OrderShippedNotification::class, $database->type);
+        $this->assertNotNull($database->available_at);
+        $this->assertEquals('Hi there. Your order has been shipped.', $database->data['contents']);
     }
 }
