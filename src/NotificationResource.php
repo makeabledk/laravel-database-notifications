@@ -4,5 +4,4 @@ namespace Makeable\DatabaseNotifications;
 
 interface NotificationResource
 {
-
 }
