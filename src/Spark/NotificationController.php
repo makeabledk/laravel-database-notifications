@@ -3,10 +3,12 @@
 namespace Makeable\DatabaseNotifications\Spark;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Laravel\Spark\Contracts\Repositories\AnnouncementRepository;
 use Laravel\Spark\Contracts\Repositories\NotificationRepository;
 use Laravel\Spark\Http\Controllers\Controller;
 use Makeable\DatabaseNotifications\Notification;
+use Makeable\DatabaseNotifications\NotificationResource;
 
 class NotificationController extends Controller
 {
@@ -50,7 +52,7 @@ class NotificationController extends Controller
     {
         return response()->json([
             'announcements' => $this->announcements->recent()->toArray(),
-            'notifications' => $this->notifications->recent($request->user())->toArray(),
+            'notifications' => $this->transformNotifications($this->notifications->recent($request->user()))
         ]);
     }
 
@@ -63,5 +65,19 @@ class NotificationController extends Controller
     public function markAsRead(Request $request)
     {
         Notification::whereIn('id', $request->notifications)->whereMorph('notifiable', $request->user())->update(['read_at' => now()]);
+    }
+
+    /**
+     * @param Collection $notifications
+     * @return array|mixed
+     */
+    protected function transformNotifications(Collection $notifications)
+    {
+        if (app()->isAlias(NotificationResource::class)) {
+            return call_user_func([
+                app()->getAlias(NotificationResource::class, 'collection')
+            ], $notifications);
+        }
+        return $notifications->toArray();
     }
 }
