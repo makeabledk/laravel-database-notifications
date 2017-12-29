@@ -52,7 +52,7 @@ class NotificationController extends Controller
     {
         return response()->json([
             'announcements' => $this->announcements->recent()->toArray(),
-            'notifications' => $this->transformNotifications($this->notifications->recent($request->user()))
+            'notifications' => $this->transformNotifications($this->notifications->recent($request->user())),
         ]);
     }
 
@@ -75,9 +75,10 @@ class NotificationController extends Controller
     {
         if (app()->isAlias(NotificationResource::class)) {
             return call_user_func([
-                app()->getAlias(NotificationResource::class, 'collection')
+                app()->getAlias(NotificationResource::class, 'collection'),
             ], $notifications);
         }
+
         return $notifications->toArray();
     }
 }
