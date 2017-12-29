@@ -3,9 +3,9 @@
 namespace Makeable\DatabaseNotifications\Channels;
 
 use Illuminate\Notifications\Notification;
-use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
 use Laravel\Spark\Team;
 use Makeable\DatabaseNotifications\Events\SparkNotificationSent;
+use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
 
 class SparkChannel extends Channel
 {
