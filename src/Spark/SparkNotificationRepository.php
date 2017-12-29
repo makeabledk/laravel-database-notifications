@@ -7,7 +7,6 @@ use Laravel\Spark\Events\NotificationCreated;
 use Makeable\DatabaseNotifications\Channels\SparkChannel;
 use Makeable\DatabaseNotifications\DatabaseChannelManager;
 use Makeable\DatabaseNotifications\Notification;
-use Ramsey\Uuid\Uuid;
 
 class SparkNotificationRepository implements NotificationRepositoryContract
 {
@@ -43,7 +42,6 @@ class SparkNotificationRepository implements NotificationRepositoryContract
     public function create($user, array $data)
     {
         $notification = new Notification();
-        $notification->id = Uuid::uuid4();
         $notification->channel = app(DatabaseChannelManager::class)->getAlias(SparkChannel::class);
         $notification->data = array_only($data, ['icon', 'body', 'action_text', 'action_url']);
         $notification->template = array_get($data, 'template');

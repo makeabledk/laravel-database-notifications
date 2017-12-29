@@ -32,7 +32,6 @@ class CreateNotificationTest extends TestCase
             $stored = Notification::first();
 
             $this->assertTrue($notifiable->is($stored->notifiable));
-            $this->assertEquals($event->notification->id, $stored->id);
             $this->assertEquals('mail', $stored->channel);
 
             $sent = true;

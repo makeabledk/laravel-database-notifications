@@ -37,7 +37,6 @@ abstract class Channel
 
         $notification->fill($this->fetchAttributes($notifiable, $template));
         $notification->data = $this->serialize($notification->data);
-        $notification->id = $template->id;
 
         $notification->save();
 

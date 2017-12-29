@@ -8,6 +8,8 @@
     },
     "require": {
         "php": ">=7.0.0",
+        "illuminate/container": "^5.4",
+        "illuminate/notifications": "^5.4",
         "illuminate/support": "^5.4"
     },
     "require-dev": {

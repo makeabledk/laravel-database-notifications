@@ -2,12 +2,30 @@
 
 namespace Makeable\DatabaseNotifications\Channels;
 
-use Illuminate\Notifications\DatabaseNotification;
-use Laravel\Spark\Notifications\SparkChannel as BaseSparkChannel;
+use Illuminate\Notifications\Notification;
+use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
+use Laravel\Spark\Team;
 use Makeable\DatabaseNotifications\Events\SparkNotificationSent;
 
-class SparkChannel extends BaseSparkChannel
+class SparkChannel extends Channel
 {
+    /*
+    * @param $notifiable
+    * @param Notification $notification
+    */
+    public function send($notifiable, Notification $template)
+    {
+        if (method_exists($notifiable, 'routeNotificationForSpark')) {
+            $notifiable = $notifiable->routeNotificationForSpark() ? $notifiable->routeNotificationForSpark() : $notifiable;
+        }
+
+        $users = $notifiable instanceof Team ? $notifiable->users : [$notifiable];
+
+        foreach ($users as $user) {
+            parent::send($user, $template);
+        }
+    }
+
     /**
      * @param DatabaseNotification $notification
      */

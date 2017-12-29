@@ -9,11 +9,6 @@ class Notification extends Model
     use InteractsWithPolymorphism;
 
     /**
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
      * @var array
      */
     protected $guarded = [];
