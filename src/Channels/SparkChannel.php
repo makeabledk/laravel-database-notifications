@@ -31,6 +31,9 @@ class SparkChannel extends Channel
      */
     public function sendNow(DatabaseNotification $notification)
     {
-        SparkNotificationSent::dispatch($notification->notifiable, $notification);
+        event(app()->makeWith(SparkNotificationSent::class, [
+            'notifiable' => $notification->notifiable,
+            'notification' => $notification
+        ]));
     }
 }

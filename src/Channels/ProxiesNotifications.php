@@ -27,10 +27,10 @@ trait ProxiesNotifications
         );
 
         if (method_exists($this, 'notificationSentEvent')) {
-            call_user_func_array(
-                [$this->notificationSentEvent(), 'dispatch'],
-                [$notification->notifiable, $notification]
-            );
+            event(app()->makeWith($this->notificationSentEvent(), [
+                'notifiable' => $notification->notifiable,
+                'notification' => $notification
+            ]));
         }
     }
 
