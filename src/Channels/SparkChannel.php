@@ -33,7 +33,7 @@ class SparkChannel extends Channel
     {
         event(app()->makeWith(SparkNotificationSent::class, [
             'notifiable' => $notification->notifiable,
-            'notification' => $notification
+            'notification' => $notification,
         ]));
     }
 }
