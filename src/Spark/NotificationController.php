@@ -75,7 +75,7 @@ class NotificationController extends Controller
     {
         if (app()->isAlias(NotificationResource::class)) {
             return call_user_func([
-                app()->getAlias(NotificationResource::class, 'collection'),
+                app()->getAlias(NotificationResource::class), 'collection',
             ], $notifications);
         }
 

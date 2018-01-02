@@ -18,6 +18,7 @@ class SparkNotificationRepository implements NotificationRepositoryContract
         // Retrieve all unread notifications for the user...
         $unreadNotifications = Notification::with('creator')
             ->whereMorph('notifiable', $user)
+            ->channel($this->sparkChannel())
             ->unread()
             ->latest('sent_at')
             ->get();
@@ -25,6 +26,7 @@ class SparkNotificationRepository implements NotificationRepositoryContract
         // Retrieve the 8 most recent read notifications for the user...
         $readNotifications = Notification::with('creator')
             ->whereMorph('notifiable', $user)
+            ->channel($this->sparkChannel())
             ->read()
             ->latest('sent_at')
             ->take(8)
@@ -42,7 +44,7 @@ class SparkNotificationRepository implements NotificationRepositoryContract
     public function create($user, array $data)
     {
         $notification = new Notification();
-        $notification->channel = app(DatabaseChannelManager::class)->getAlias(SparkChannel::class);
+        $notification->channel = $this->sparkChannel();
         $notification->data = array_only($data, ['icon', 'body', 'action_text', 'action_url']);
         $notification->template = array_get($data, 'template');
         $notification->available_at = array_get($data, 'available_at');
@@ -62,5 +64,13 @@ class SparkNotificationRepository implements NotificationRepositoryContract
     public function personal($user, $from, array $data)
     {
         return $this->create($user, array_merge($data, ['from' => $from]));
+    }
+
+    /**
+     * @return string
+     */
+    private function sparkChannel()
+    {
+        return app(DatabaseChannelManager::class)->getAlias(SparkChannel::class);
     }
 }

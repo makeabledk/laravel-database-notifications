@@ -62,6 +62,16 @@ class Notification extends Model
 
     /**
      * @param $query
+     * @param $channel
+     * @return mixed
+     */
+    public function scopeChannel($query, $channel)
+    {
+        return $query->where('channel', $channel);
+    }
+
+    /**
+     * @param $query
      * @return mixed
      */
     public function scopePending($query)
