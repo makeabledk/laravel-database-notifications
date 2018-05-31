@@ -3,7 +3,6 @@
 namespace Makeable\DatabaseNotifications\Tests;
 
 use App\User;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Mail;
 use Makeable\DatabaseNotifications\DatabaseNotificationsServiceProvider;
