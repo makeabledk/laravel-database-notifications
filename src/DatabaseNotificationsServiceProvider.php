@@ -16,8 +16,19 @@ class DatabaseNotificationsServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        if (! class_exists('CreateMakeableDatabaseNotificationsTable')) {
+            $this->publishes([
+                __DIR__.'/../database/create_makeable_database_notifications_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_makeable_database_notifications_table.php'),
+            ], 'migrations');
+        }
+
+        $this->mergeConfigFrom(__DIR__.'/../config/database-notifications.php', 'database-notifications');
+        $this->publishes([__DIR__.'/../../config/database-notifications.php' => config_path('database-notifications.php')], 'config');
+
+        $this->commands(SendPendingNotifications::class);
+
         Notification::created(function ($notification) {
-            if (config('database-notifications.send-immediately') === true) {
+            if (config('database-notifications.send-immediately') === true && ! $notification->sent_at) {
                 SendNotification::dispatch($notification);
             }
         });
@@ -25,9 +36,6 @@ class DatabaseNotificationsServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/database-notifications.php', 'database-notifications');
-        $this->loadMigrationsFrom(__DIR__.'/../database');
-
         $this->app->singleton(DatabaseChannelManager::class, function () {
             return tap(new DatabaseChannelManager, function ($manager) {
                 $manager->extend('broadcast', BroadcastChannel::class);
@@ -38,9 +46,5 @@ class DatabaseNotificationsServiceProvider extends ServiceProvider
                 $manager->extend('spark', SparkChannel::class);
             });
         });
-
-        $this->commands([
-            SendPendingNotifications::class,
-        ]);
     }
 }

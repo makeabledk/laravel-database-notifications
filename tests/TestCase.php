@@ -16,8 +16,6 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->setUpDatabase($this->app);
-
         Mail::fake();
     }
 
@@ -36,6 +34,9 @@ class TestCase extends BaseTestCase
 
         $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
         $app->register(DatabaseNotificationsServiceProvider::class);
+        $app->afterResolving('migrator', function ($migrator) {
+            $migrator->path(__DIR__.'/migrations/');
+        });
 
         return $app;
     }
@@ -51,16 +52,6 @@ class TestCase extends BaseTestCase
                 'email' => 'test@example.com',
                 'password' => 'foo',
             ])->save();
-        });
-    }
-
-    /**
-     * @param \Illuminate\Foundation\Application $app
-     */
-    protected function setUpDatabase($app)
-    {
-        $app['db']->connection()->getSchemaBuilder()->create('orders', function (Blueprint $table) {
-            $table->increments('id');
         });
     }
 
