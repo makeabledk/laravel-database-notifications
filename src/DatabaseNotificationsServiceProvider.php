@@ -23,7 +23,7 @@ class DatabaseNotificationsServiceProvider extends ServiceProvider
         }
 
         $this->mergeConfigFrom(__DIR__.'/../config/database-notifications.php', 'database-notifications');
-        $this->publishes([__DIR__.'/../../config/database-notifications.php' => config_path('database-notifications.php')], 'config');
+        $this->publishes([__DIR__.'/../config/database-notifications.php' => config_path('database-notifications.php')], 'config');
 
         $this->commands(SendPendingNotifications::class);
 
