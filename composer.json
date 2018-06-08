@@ -8,12 +8,12 @@
     },
     "require": {
         "php": ">=7.0.0",
-        "illuminate/container": "^5.4",
-        "illuminate/notifications": "^5.4",
-        "illuminate/support": "^5.4"
+        "illuminate/container": "^5.6",
+        "illuminate/notifications": "^5.6",
+        "illuminate/support": "^5.6"
     },
     "require-dev": {
-        "laravel/laravel": "5.5",
+        "laravel/laravel": "5.6",
         "friendsofphp/php-cs-fixer": "^2.3",
         "orchestra/testbench": "~3.5"
     },

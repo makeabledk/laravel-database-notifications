@@ -74,7 +74,7 @@ trait Serialization
      */
     protected function restoreQueueableEntity($value)
     {
-        return $this->getRestoredPropertyValue(new ModelIdentifier($value['class'], $value['id'], $value['connection']));
+        return $this->getRestoredPropertyValue(new ModelIdentifier($value['class'], $value['id'], $value['relations'], $value['connection']));
     }
 
     /**
@@ -83,6 +83,6 @@ trait Serialization
      */
     protected function isQueueableEntity($value)
     {
-        return is_array($value) && isset($value['class'], $value['id'], $value['connection']);
+        return is_array($value) && isset($value['class'], $value['id'], $value['relations'], $value['connection']);
     }
 }
