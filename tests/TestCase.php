@@ -36,6 +36,7 @@ class TestCase extends BaseTestCase
         $app->afterResolving('migrator', function ($migrator) {
             $migrator->path(__DIR__.'/migrations/');
         });
+        $app['view']->addNamespace('tests', __DIR__.'/views');
 
         return $app;
     }

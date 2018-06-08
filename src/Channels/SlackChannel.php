@@ -17,11 +17,11 @@ class SlackChannel extends Channel
      */
     public function deserialize($data)
     {
-        return tap($this->buildObject(new SlackMessage, $data), function ($message) {
+        return tap($this->restoreObject(new SlackMessage, $data), function ($message) {
             $message->attachments = collect($message->attachments)->map(function ($attachment) {
-                return tap($this->buildObject(new SlackAttachment, $attachment), function ($attachment) {
+                return tap($this->restoreObject(new SlackAttachment, $attachment), function ($attachment) {
                     $attachment->fields = collect($attachment->fields)->map(function ($field) {
-                        return $this->buildObject(new SlackAttachmentField, $field);
+                        return $this->restoreObject(new SlackAttachmentField, $field);
                     })->toArray();
                 });
             })->toArray();

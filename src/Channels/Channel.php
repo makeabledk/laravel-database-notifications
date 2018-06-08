@@ -9,6 +9,8 @@ use Makeable\DatabaseNotifications\Notification as DatabaseNotification;
 
 abstract class Channel
 {
+    use Serialization;
+
     /**
      * @param DatabaseNotification $notification
      */
@@ -35,33 +37,9 @@ abstract class Channel
         $notification->channel = $this->alias();
         $notification->template = get_class($template);
 
-        $notification->fill($this->fetchAttributes($notifiable, $template));
-        $notification->data = $this->serialize($notification->data);
-
-        $notification->save();
+        $this->fillData($notification, $notifiable, $template)->save();
 
         return $notification;
-    }
-
-    /**
-     * @param $data
-     * @return mixed
-     */
-    public function serialize($data)
-    {
-        if (is_object($data)) {
-            return get_object_vars($data);
-        }
-
-        if (! is_array($data)) {
-            return $data;
-        }
-
-        foreach ($data as $key => $value) {
-            $data[$key] = $this->serialize($value);
-        }
-
-        return $data;
     }
 
     /**
@@ -73,33 +51,21 @@ abstract class Channel
     }
 
     /**
-     * @param $properties
-     * @param $object
-     * @return mixed
-     */
-    protected function buildObject($object, $properties)
-    {
-        return tap($object, function ($object) use ($properties) {
-            foreach ($properties as $property => $value) {
-                $object->{$property} = $value;
-            }
-        });
-    }
-
-    /**
+     * @param DatabaseNotification $notification
      * @param $notifiable
-     * @param Notification $notification
-     * @return array
+     * @param $template
+     * @return DatabaseNotification
      */
-    protected function fetchAttributes($notifiable, Notification $notification)
+    protected function fillData(DatabaseNotification $notification, $notifiable, $template)
     {
-        $data = $notification->{$this->toMethod()}($notifiable);
+        $data = $template->{$this->toMethod()}($notifiable);
 
         if ($data instanceof DatabaseNotification) {
-            return $data->toArray();
+            $notification->fill(array_except($data->toArray(), ['data']));
+            $data = $data->data;
         }
 
-        return ['data' => $data];
+        return $notification->fill(['data' => $this->serialize($data)]);
     }
 
     /**

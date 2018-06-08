@@ -15,7 +15,7 @@ class MailChannel extends Channel
      */
     public function deserialize($data)
     {
-        return $this->buildObject(new MailMessage, $data);
+        return $this->restoreObject(new MailMessage, $data);
     }
 
     /**

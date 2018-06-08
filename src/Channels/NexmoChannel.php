@@ -15,7 +15,7 @@ class NexmoChannel extends Channel
      */
     public function deserialize($data)
     {
-        return $this->buildObject(new NexmoMessage, $data);
+        return $this->restoreObject(new NexmoMessage, $data);
     }
 
     /**

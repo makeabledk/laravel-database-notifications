@@ -66,6 +66,7 @@ class OrderShippedNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
+            ->markdown('tests::order_mail', ['order' => $this->order])
             ->greeting('Hi there')
             ->line('Your order has been shipped!')
             ->action('Check it out', 'example.com')
