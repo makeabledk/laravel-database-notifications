@@ -29,6 +29,7 @@ trait Serialization
             foreach ($data as $key => $value) {
                 $data[$key] = $this->serialize($value, $key);
             }
+
             return $data;
         }
 
