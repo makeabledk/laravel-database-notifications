@@ -69,7 +69,7 @@ class SparkNotificationRepository implements NotificationRepositoryContract
     /**
      * @return string
      */
-    private function sparkChannel()
+    protected function sparkChannel()
     {
         return app(DatabaseChannelManager::class)->getAlias(SparkChannel::class);
     }
